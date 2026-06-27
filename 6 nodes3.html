@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Data Form</title>
+  <link rel="stylesheet" href="1.css">
+</head>
+<body>
+<form id="dataForm">
+  <p class="form-eyebrow">New Account</p>
+  <h2>User Registration</h2>
+  <p class="form-sub">Tell us a little about yourself. Fields marked are required to complete your profile.</p>
+  <hr>
+
+  <div class="field">
+    <span class="field-index">01</span>
+    <label for="name">Full Name</label>
+    <input id="name" type="text" name="name" placeholder="Jane Doe" required>
+  </div>
+
+  <div class="field">
+    <span class="field-index">02</span>
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" placeholder="jane@example.com" required>
+  </div>
+
+  <div class="field">
+    <span class="field-index">03</span>
+    <label for="phone">Phone Number</label>
+    <input id="phone" type="text" name="phone" placeholder="+1 (555) 000-0000" required>
+  </div>
+
+  <div class="field">
+    <span class="field-index">04</span>
+    <label for="city">City</label>
+    <input id="city" type="text" name="city" placeholder="San Francisco" required>
+  </div>
+
+  <div class="field">
+    <span class="field-index">05</span>
+    <label for="gender">Gender</label>
+    <select id="gender" name="gender" required>
+      <option value="" disabled selected>Select</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <span class="field-index">06</span>
+    <label for="age">Age</label>
+    <input id="age" type="number" name="age" placeholder="28" required>
+  </div>
+
+  <button type="submit">Create account</button>
+  <p id="responseMsg"></p>
+</form>
+
+<script>
+document.getElementById("dataForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+  const data = {};
+  formData.forEach((value, key) => {
+    data[key] = value;
+  });
+  const msg = document.getElementById("responseMsg");
+  fetch("https://umar5344.app.n8n.cloud/webhook/68a66f10-914e-4265-a723-2ce589b2ff48", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    msg.innerText = "✅ Form submitted successfully!";
+    msg.style.color = "#2f7a4f";
+    document.getElementById("dataForm").reset();
+    setTimeout(() => { msg.innerText = ""; }, 3000);
+  })
+  .catch(error => {
+    msg.innerText = "❌ Error submitting form!";
+    msg.style.color = "#8a3b2e";
+    console.error(error);
+    setTimeout(() => { msg.innerText = ""; }, 3000);
+  });
+});
+</script>
+</body>
+</html>
